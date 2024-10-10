@@ -51,4 +51,6 @@ router.get('/addTopics',isAuth,topic.addTopics);
 router.post('/addTopicController',isAuth,topic.addTopicsController)
 router.get('/deleteTopics/:id',isAuth,topic.deletTopics);
 router.get('/subTopic',isAuth,topic.subTopic);
+router.post('/subTopicContoller',isAuth,topic.subTopicContoller);
+router.get('/viewTopics',isAuth,topic.viewTopics);
 module.exports = router;

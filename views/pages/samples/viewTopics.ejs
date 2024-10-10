@@ -222,7 +222,7 @@
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
           <ul class="nav">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">
+              <a class="nav-link" href="/">
                 <i class="mdi mdi-grid-large menu-icon"></i>
                 <span class="menu-title">Dashboard</span>
               </a>
@@ -231,7 +231,7 @@
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                 <i class="menu-icon mdi mdi-floor-plan"></i>
-                <span class="menu-title">Blog Pages</span>
+                <span class="menu-title">Pages</span>
                 <i class="menu-arrow"></i>
               </a>
               <div class="collapse" id="ui-basic">
@@ -306,8 +306,6 @@
                   <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
                   <li class="nav-item"> <a class="nav-link" href="/login"> Login </a></li>
                   <li class="nav-item"> <a class="nav-link" href="/signup"> Register </a></li>
-                  <li class="nav-item"> <a class="nav-link" href="/forgotPassword"> Forgot password </a></li>
-                  <li class="nav-item"> <a class="nav-link" href="/changePassword"> Change password </a></li>
                 </ul>
               </div>
             </li>
@@ -324,24 +322,28 @@
           <div class="content-wrapper">
             <div class="row">
               <div class="col-sm-12">
-                <div class="container">
-                    <h2>Blogs:</h2>
-                    <div class="row">
-                      <% blogData.forEach((blog) => { %>
+                <h2>View Topics</h2>
+                <div class="row">
+                    <% subtopic.forEach(subtopicData=> { %>
                       <div class="col-md-4" style="width: 25%;">
-                          <div class="card mb-4">
-                              <img src="../../<%= blog.blog_img %>" class="card-img-top" alt="<%= blog.title %>" style="height: 250px;">
-                              <div class="card-body">
-                                  <h5 class="card-title"><%= blog.title %></h5>
-                                  <p class="card-text"><%= blog.content %></p>
-                                  <a href="/editBlog/<%= blog._id %>" class="btn btn-outline-warning">Edit</a>
-                                  <a href="/deleteBlog/<%= blog._id %>" class="btn btn-outline-danger">Delete</a>
-                              </div>
+                        <div class="card mb-4">
+                          <div class="card-body">
+                            <h4 class="card-title">Topic : <%= subtopicData.topic.topic %>
+                            </h4>
+                            <h5>Sub Topic : <%= subtopicData.subTopic %>
+                            </h5>
+                            <div class="d-flex align-items-center justify-content-between">
+                              <span>Created By <%= subtopicData.topic.creater_name %></span>
+                              <% if (subtopicData.topic.user_id.toString()===data._id.toString()) { %>
+                                <a href="/deleteTopic/<%= subtopicData._id %>"
+                                  class="btn btn-outline-danger ml-auto">Delete</a>
+                                <% } %>
+                            </div>
                           </div>
+                        </div>
                       </div>
                       <% }) %>
                   </div>
-                </div>
     
                 <div class="content-backdrop fade"></div>
               </div>

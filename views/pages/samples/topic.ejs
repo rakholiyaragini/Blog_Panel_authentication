@@ -241,6 +241,7 @@
                   <li class="nav-item"> <a class="nav-link" href="/addBlog">Add Blog</a></li>
                   <li class="nav-item"> <a class="nav-link" href="/addTopics">Add Topic</a></li>
                   <li class="nav-item"> <a class="nav-link" href="/subTopic">Sub Topics</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="/viewTopics">View Topics</a></li>
                 </ul>
               </div>
             </li>
@@ -351,26 +352,6 @@
                   </div>
                   <!-- page-body-wrapper ends -->
                 </div>
-
-                <h2>View Topics</h2>
-                <div class="row">
-                  <% topic.forEach(topicData => { %>
-                    <div class="col-md-4" style="width: 25%;">
-                      <div class="card mb-4">
-                        <div class="card-body">
-                          <h5 class="card-title"><%= topicData.topic %></h5>
-                          <div class="d-flex align-items-center justify-content-between">
-                            <span>Created Topic By <%= topicData.creater_name %></span>
-                            <% if (topicData.user_id == data._id) { %>
-                              <a href="/deleteTopics/<%= topicData._id %>" class="btn btn-outline-danger ml-auto">Delete</a>
-                            <% } %>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  <% }) %>
-                </div>
-    
                 <div class="content-backdrop fade"></div>
               </div>
               </div>

@@ -4,17 +4,17 @@ const otpGenerator = require('otp-generator');
 const nodeMailer = require('nodemailer');
 let myOtp = null;
 
-const Transporter = nodeMailer.createTransport({
+// const Transporter = nodeMailer.createTransport({
     
-    host : "smtp.gmail.com",
-    port : 465,
-    secure : true,
-    auth : {
-        user : "raginirakholiya123@gmail.com",
-        pass : "sqlloaskzxuzqcf",
-    }
+//     host : "smtp.gmail.com",
+//     port : 465,
+//     secure : true,
+//     auth : {
+//         user : "raginirakholiya123@gmail.com",
+//         pass : "sqlloaskzxuzqcf",
+//     }
   
-})
+// })
 const forgotPassword = (req, res) => {
     console.log("forgot Password");
     res.render('pages/samples/forgotPassword');
@@ -29,27 +29,26 @@ const forgotPasswordController = async (req, res) => {
         console.log("user found");
         let link = `http://localhost:3004/confirmOTP/${user.id}`
         console.log("RESET LINK >>>",link);
-        console.log("RESET LINK >>>",link); 
         
         res.redirect(`/forgotPassword`);
     } else {
         console.log("user not found");
         res.redirect('/signUp');
     }
-    const generateOtp = {
-        from : "raginirakholiya123@gmail.com",
-        to : user.email,
-        subject : "Reset Password",
-        text : `Your reset password link is <a href="${link}">click here</a>`
-    }   
+    // const generateOtp = {
+    //     from : "raginirakholiya123@gmail.com",
+    //     to : user.email,
+    //     subject : "Reset Password",
+    //     text : `Your reset password link is <a href="${link}">click here</a>`
+    // }   
 
-    Transporter.sendMail(generateOtp, (err, data) => {
-        if (err) {
-            console.log("Error", err);
-        } else {
-            console.log("Email sent");
-        }
-    })
+    // Transporter.sendMail(generateOtp, (err, data) => {
+    //     if (err) {
+    //         console.log("Error", err);
+    //     } else {
+    //         console.log("Email sent");
+    //     }
+    // })
 };
 const otp = (req, res) => {
     // console.log("id", req.params.id);

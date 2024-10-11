@@ -1,21 +1,21 @@
 const topicModel = require('../models/topics/topicModel');
 const subTopicModel = require('../models/subTopic/subTopicModel');
-const addTopics = (req,res) => {
+const addTopics = (req, res) => {
     console.log("add topic");
     topicModel.find({})
-    .then(topic => {
-        console.log("topics form my db", topic);
-        res.render('pages/samples/topic',{ data: req.user, topic: topic });
-    })
-    .catch(err => console.log(err));   
+        .then(topic => {
+            console.log("topics form my db", topic);
+            res.render('pages/samples/topic', { data: req.user, topic: topic });
+        })
+        .catch(err => console.log(err));
 }
-const addTopicsController = async(req,res) => {
+const addTopicsController = async (req, res) => {
     console.log("add topic controller");
-    console.log("req.body",req.body);
+    console.log("req.body", req.body);
     const data = {
         topic: req.body.topic,
-        user_id : req.user._id,
-        creater_name : req.user.name
+        user_id: req.user._id,
+        creater_name: req.user.name
     };
 
     let model = new topicModel(data);
@@ -23,12 +23,12 @@ const addTopicsController = async(req,res) => {
     await model.save();
 
     topicModel.find({})
-    .then(topic => {
-        console.log("topics form my db", topic);
-        res.render('pages/samples/topic',{ data: req.user, topic: topic });
-    })
-    .catch(err => console.log(err));
-    
+        .then(topic => {
+            console.log("topics form my db", topic);
+            res.render('pages/samples/topicAdded', { data: req.user, topic: topic });
+        })
+        .catch(err => console.log(err));
+
 }
 const deletTopics = async (req, res) => {
     console.log("delete blog");
@@ -51,11 +51,11 @@ const subTopic = async (req, res) => {
 
         console.log("sub topics from my db", subTopicData);
         console.log("topics from my db", topicData);
-        console.log("req.user",req.user);
-        
+        console.log("req.user", req.user);
 
-        res.render('pages/samples/subTopic', {
-            data: req.user, 
+
+        res.render('pages/samples/viewTopicBtn', {
+            data: req.user,
             topic: topicData,
             subtopic: subTopicData
         });
@@ -92,11 +92,32 @@ const subTopicContoller = async (req, res) => {
 const viewTopics = async (req, res) => {
     console.log("view topics");
     await subTopicModel.find({}).populate('topic')
-    .then(subTopic => {
-        console.log("topics form my db", subTopic);
-        res.render('pages/samples/viewTopics',{ data: req.user, subtopic: subTopic });
-    })
-    .catch(err => console.log(err));
+        .then(subTopic => {
+            console.log("topics form my db", subTopic);
+            res.render('pages/samples/viewTopics', { data: req.user, subtopic: subTopic });
+        })
+        .catch(err => console.log(err));
 };
 
-module.exports = {addTopics , addTopicsController , deletTopics , subTopic , subTopicContoller , viewTopics};
+const topicAdded = async (req, res) => {
+    const subTopic = await subTopicModel.find({}).populate('topic');
+
+    const topicData = await topicModel.find({});
+    res.render('pages/samples/subTopic', {
+        data: req.user,
+        subtopic: subTopic,
+        topic: topicData
+    });
+};
+
+const viewallTopic = async (req, res) => {
+    console.log("view topics");
+    await subTopicModel.find({}).populate('topic')
+        .then(subTopic => {
+            console.log("topics form my db", subTopic);
+            res.render('pages/samples/viewTopics', { data: req.user, subtopic: subTopic });
+        })
+        .catch(err => console.log(err));
+};
+
+module.exports = { addTopics, addTopicsController, deletTopics, subTopic, subTopicContoller, viewTopics, topicAdded, viewallTopic };

@@ -1,8 +1,11 @@
+const { use } = require('passport');
 const blogModel = require('../models/blog/blogModel');
+const comment = require('../models/comments/comment');
+const { model } = require('mongoose');
 
 const addBlog = async (req, res) => {
     console.log("add blog");
-    res.render('pages/samples/addBlog');
+    res.render('pages/samples/addBlog' , { errors: [], title: '', content: '', blog_img: '' });
 };
 
 const viewBlog = async (req, res) => {
@@ -26,7 +29,8 @@ const addBlogController = async (req, res) => {
         title: req.body.title,
         content: req.body.content,
         blog_img:  req.file ? req.file.path : null,
-        user_id : req.user._id,
+        user_id : userId,
+        comments: [] 
 
     };
 
@@ -73,10 +77,13 @@ const deleteController = async (req, res) => {
 const allBlog = async (req, res) => {
     console.log("view blog controller");
 
-    blogModel.find({})
+    console.log();
+    
+    const commnetData = await comment.find({});
+    blogModel.find({}).populate({path: 'comments', populate: {path: 'user' , model: 'user'}})
     .then(blogData => {
         console.log("blogData", blogData);
-        res.render('pages/samples/allBlog', { data: req.user, blogData: blogData });
+        res.render('pages/samples/allBlog', { data: req.user, blogData: blogData , comment: commnetData  });
     })
     .catch(err => console.log(err));
 }

@@ -3,6 +3,7 @@ const router = express.Router();
 const controller = require('../controllers/controller');
 const signUp = require('../controllers/signUpController');
 const logIn = require('../controllers/loginController');
+const commentController = require('../controllers/commentController');
 const passport = require('../config/passportConfig');
 const isAuth = require('../auth/auth');
 const blog = require('../controllers/blog');
@@ -53,5 +54,9 @@ router.get('/deleteTopics/:id',isAuth,topic.deletTopics);
 router.get('/subTopic',isAuth,topic.subTopic);
 router.post('/subTopicContoller',isAuth,topic.subTopicContoller);
 router.get('/viewTopics',isAuth,topic.viewTopics);
+router.get('/deleteTopicAndSubTopics/:id',isAuth,topic.deleteTopicAndSubTopics);
+
+//comment routes
+router.post('/addComment/:id',isAuth,commentController.addComment)
 
 module.exports = router;

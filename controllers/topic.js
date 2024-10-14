@@ -91,12 +91,40 @@ const subTopicContoller = async (req, res) => {
 
 const viewTopics = async (req, res) => {
     console.log("view topics");
-    await subTopicModel.find({}).populate('topic')
-        .then(subTopic => {
-            console.log("topics form my db", subTopic);
-            res.render('pages/samples/viewTopics', { data: req.user, subtopic: subTopic });
-        })
-        .catch(err => console.log(err));
+    const allTopics = await topicModel.find({});
+    const subTopics = await subTopicModel.find({}).populate('topic');
+
+    const topicsWithSubtopics = allTopics.map(topic => {
+        const relatedSubtopics = subTopics.filter(sub => sub.topic && sub.topic._id.toString() === topic._id.toString());
+        return {
+            ...topic._doc,
+            subtopics: relatedSubtopics
+        };
+    });
+    res.render('pages/samples/viewTopics', {
+        data: req.user,
+        topicsWithSubtopics: topicsWithSubtopics
+    });
+};
+const deleteTopicAndSubTopics = async (req, res) => {
+    const topicId = req.params.id;
+    const userId = req.user._id;
+
+    const topic = await topicModel.findById(topicId);
+
+    if (topic.user_id.toString() !== userId.toString()) {
+
+        return res.status(403).send('Unauthorized: You can only delete your own topics');
+    }
+    await topicModel.findByIdAndDelete(topicId);
+
+    await subTopicModel.deleteMany({ topic: topicId });
+
+    console.log("Topic and subtopics deleted....");
+
+    res.redirect('/viewTopics');
 };
 
-module.exports = { addTopics, addTopicsController, deletTopics, subTopic, subTopicContoller, viewTopics};
+
+
+module.exports = { addTopics, addTopicsController, deletTopics, subTopic, subTopicContoller, viewTopics, deleteTopicAndSubTopics };

@@ -321,24 +321,31 @@
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="row">
-              <div class="col-sm-12">
-                <div class="container">
-                    <h2>Blogs:</h2>
-                    <div class="row">
-                      <% blogData.forEach(blog => { %>
-                      <div class="col-md-4" style="width: 25%;">
-                          <div class="card mb-4">
-                              <img src="../../<%= blog.blog_img %>" class="card-img-top" alt="<%= blog.title %>" style="height: 250px;">
-                              <div class="card-body">
-                                  <h5 class="card-title"><%= blog.title %></h5>
-                                  <p class="card-text"><%= blog.content %></p>
-                              </div>
-                          </div>
+              <% blogData.forEach(blog => { %>
+              <div class="col-md-4" style="width: 25%;">
+                  <div class="card mb-4">
+                      <img src="../../<%= blog.blog_img %>" class="card-img-top" alt="<%= blog.title %>" style="height: 250px;">
+                      <div class="card-body">
+                          <h5 class="card-title"><%= blog.title %></h5>
+                          <p class="card-text"><%= blog.content %></p>
+                          <% comment.forEach(comment => { %>
+                            <div class="mb-1">
+                              <h5 class="m-0">Comment : <%= comment.comment %></h5>
+                              <span>Commeted by <%= comment.user.name %></span>
+                              <% if(data._id == comment.user._id){ %>
+                                <a href ="/deletComment" class="ms-2 text-danger">delete</a>
+                              <% } %>
+                            </div>
+                          <%})%>
+                            <form action="/addComment/<%= blog._id %>" method="post" class="d-flex">
+                              <input type="text" name="comment" id="comment" placeholder="Add Comment"class="form-control p-1 me-2">
+                              <button class="btn btn-primary">Add</button>
+                            </form>
                       </div>
-                      <% }) %>
                   </div>
-                </div>
-    
+              </div>
+              <% }) %>
+          </div>
                 <div class="content-backdrop fade"></div>
               </div>
               </div>

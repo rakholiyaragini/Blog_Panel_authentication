@@ -57,6 +57,7 @@ router.get('/viewTopics',isAuth,topic.viewTopics);
 router.get('/deleteTopicAndSubTopics/:id',isAuth,topic.deleteTopicAndSubTopics);
 
 //comment routes
-router.post('/addComment/:id',isAuth,commentController.addComment)
+router.post('/addComment/:id',isAuth,commentController.addComment);
+router.get('/deletComment/:id',isAuth,commentController.deletComment);
 
 module.exports = router;

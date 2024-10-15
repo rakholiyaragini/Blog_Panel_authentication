@@ -2,19 +2,21 @@ const bcrypt = require('bcrypt');
 const signUpModel = require('../models/signUpmodel');
 const otpGenerator = require('otp-generator');
 const nodeMailer = require('nodemailer');
+const token_generator = require('token-generator');
 let myOtp = null;
 
-// const Transporter = nodeMailer.createTransport({
-    
-//     host : "smtp.gmail.com",
-//     port : 465,
-//     secure : true,
-//     auth : {
-//         user : "raginirakholiya123@gmail.com",
-//         pass : "sqlloaskzxuzqcf",
-//     }
-  
-// })
+const Transporter = nodeMailer.createTransport({
+
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    service: "gmail",
+    auth: {
+        user: "raginirakholiya123@gmail.com",
+        pass: "irkhzcvhebtuuxtr",
+    }
+
+})
 const forgotPassword = (req, res) => {
     console.log("forgot Password");
     res.render('pages/samples/forgotPassword');
@@ -26,30 +28,43 @@ const forgotPasswordController = async (req, res) => {
     const user = await signUpModel.findOne({ email: email });
 
     if (user) {
+        const tokenGenerator = new token_generator({
+            salt: 'some-salt',
+            timestamp: true,
+            timestampMap: '0123456789'
+        });
+        let token = tokenGenerator.generate();
+
+        // const token_generator = new token_ge nerator({
+        //     salt: 'some-salt',
+        //     timestamp: true
+        // });
+        await signUpModel.updateOne({ _id: user._id }, { resetToken: token });
+
         console.log("user found");
-        let link = `http://localhost:3004/confirmOTP/${user.id}`
-        console.log("RESET LINK >>>",link);
-        
-        res.redirect(`/forgotPassword`);
+        let link = `http://localhost:3004/confirmOTP/${user.id}`;
+        console.log("RESET LINK >>>", link);
+
+        const generateOtp = {
+            from: "raginirakholiya123@gmail.com",
+            to: user.email,
+            subject: "Reset Password",
+            text: `Your reset password link is <a href="${link}">click here</a>`
+        };
+        Transporter.sendMail(generateOtp, (error, info) => {
+            if (error) {
+                return console.log('Error:', error);
+            }
+            console.log('Email sent:', info.response);
+        });
+
+        res.redirect('/forgotPassword');
     } else {
         console.log("user not found");
         res.redirect('/signUp');
     }
-    // const generateOtp = {
-    //     from : "raginirakholiya123@gmail.com",
-    //     to : user.email,
-    //     subject : "Reset Password",
-    //     text : `Your reset password link is <a href="${link}">click here</a>`
-    // }   
-
-    // Transporter.sendMail(generateOtp, (err, data) => {
-    //     if (err) {
-    //         console.log("Error", err);
-    //     } else {
-    //         console.log("Email sent");
-    //     }
-    // })
 };
+
 const otp = (req, res) => {
     // console.log("id", req.params.id);
     // let otp = otpGenerator.generate(6, { upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
@@ -63,41 +78,49 @@ const otp = (req, res) => {
 //     const userId = req.params.id;
 //     res.render('pages/samples/resetPassword', { id: userId });
 // };
-const confirmOTP = async(req,res) => {
-    console.log("Reset Password",req.params.id);
+const confirmOTP = async (req, res) => {
+    console.log("Reset Password", req.params.id);
 
-    try{
-        const user =await signUpModel.findOne({_id : req.params.id});
+    try {
+        const user = await signUpModel.findOne({ _id: req.params.id });
 
-        console.log("user",user);
-        if(user){
-            res.render('pages/samples/resetPassword',{ id:req.params.id});
-        }else{
+        console.log("user", user);
+        if (user) {
+            if (user.resetToken) {
+                await signUpModel.updateOne({ _id: req.params.id }, { resetToken: null });
+                res.render('pages/samples/resetPassword', { id: req.params.id });
+            } else {
+                console.log("Invalid Link");
+
+                res.redirect('/errorPage');
+            }
+
+        } else {
             res.redirect('/errorPage');
         }
-    }catch{
+    } catch {
         console.log("Invalid Link");
-        
+
         res.redirect('/errorPage');
     }
 }
 const resetPasswordController = async (req, res) => {
     const id = req.params.id;
-    console.log("reset Password",id);
-    const {new_password,conf_password} = req.body;
-    if(new_password == conf_password){
-        bcrypt.hash(new_password, 10,async (err, hashPassword) => {
+    console.log("reset Password", id);
+    const { new_password, conf_password } = req.body;
+    if (new_password == conf_password) {
+        bcrypt.hash(new_password, 10, async (err, hashPassword) => {
             if (err) {
                 console.log("Error in hashing password", err);
-                return res.status(500).send("Server error"); 
+                return res.status(500).send("Server error");
             }
-            console.log("hash",hashPassword);
-             const newPass =await signUpModel.updateOne({_id:id},{password:hashPassword});
-            console.log("updated pass",newPass);
-            
+            console.log("hash", hashPassword);
+            const newPass = await signUpModel.updateOne({ _id: id }, { password: hashPassword });
+            console.log("updated pass", newPass);
+
         })
         res.redirect('/');
-    }else{
+    } else {
         console.log("new pass & con pass not mathed");
         res.redirect(`/resetPassword/${id}`);
     }
@@ -140,9 +163,9 @@ const chanagePasswordController = (req, res) => {
     })
 }
 
-const errorPage = ( req , res) => {
+const errorPage = (req, res) => {
 
     res.render('pages/samples/errorPage');
-     
+
 }
-module.exports = { forgotPassword, forgotPasswordController, changePassword, chanagePasswordController, otp, confirmOTP ,resetPasswordController ,errorPage }
+module.exports = { forgotPassword, forgotPasswordController, changePassword, chanagePasswordController, otp, confirmOTP, resetPasswordController, errorPage }

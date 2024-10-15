@@ -328,18 +328,23 @@
                       <div class="card-body">
                           <h5 class="card-title"><%= blog.title %></h5>
                           <p class="card-text"><%= blog.content %></p>
-                          <% comment.forEach(comment => { %>
-                            <div class="mb-1">
-                              <h5 class="m-0">Comment : <%= comment.comment %></h5>
-                              <span>Commeted by <%= comment.user.name %></span>
-                              <% if(data._id == comment.user._id){ %>
-                                <a href ="/deletComment" class="ms-2 text-danger">delete</a>
-                              <% } %>
-                            </div>
-                          <%})%>
+                          <% if(comment.length > 0){ %>
+                            <h4 class="mb-3"> Comments :</h4>
+                            <% comment.forEach(comment => { %>
+                              <div class="mb-1">
+                                <% if(comment.blog && comment.blog._id.toString() == blog._id.toString()){ %>
+                                  <h5 class="m-0" style="font-size: 13px;">Comment : <%= comment.comment %></h5>
+                                  <span style="font-size: 13px;">Commeted by <%= comment.user.name %></span>
+                                  <% if(data._id.toString() == comment.user._id.toString()){ %>
+                                    <a href ="/deletComment/<%= comment._id %>" class="ms-2 text-danger" style="font-size: 13px;">delete</a>
+                                  <% } %>
+                                <% } %>
+                              </div>
+                            <%})%>
+                          <% } %>
                             <form action="/addComment/<%= blog._id %>" method="post" class="d-flex">
                               <input type="text" name="comment" id="comment" placeholder="Add Comment"class="form-control p-1 me-2">
-                              <button class="btn btn-primary">Add</button>
+                              <button class="btn btn-primary">Add+</button>
                             </form>
                       </div>
                   </div>

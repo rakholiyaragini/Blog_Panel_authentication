@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('../signUpmodel');
 
 const blogModelSchema = mongoose.Schema({
     title: {
@@ -16,19 +15,11 @@ const blogModelSchema = mongoose.Schema({
     },
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'signUp',
         required: true
     },
-    comments: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment'
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
 });
 
-const Blog = mongoose.model('Blog', blogModelSchema);
+const blogModel = mongoose.model('blog',blogModelSchema);
 
-module.exports = Blog;
+module.exports = blogModel;

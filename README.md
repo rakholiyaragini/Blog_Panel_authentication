@@ -18,13 +18,20 @@ This project is a Blog Post Panel where users can register, log in, create, read
 
 - **Register**: Users can create an account.
 - **Login**: Users can log in using Passport.js authentication.
+- **forgotPassword**: Users can forgotPassword their password.
+- **changePassword**: Users can change their password.
 - **Session Management**: Use cookies/sessions to maintain user sessions.
 
-### Blog Management
+### Management
 
 - **Add Blog**: Users can create a blog post with a title, content, and an image (uploaded using Multer).
 - **Edit Blog**: Users can edit their own blog posts.
 - **Delete Blog**: Users can delete their own blog posts.
+- **All Blog**: Users can edit their own blog posts.
+- **Add Comment**: Users can Add comment on blog posts.
+- **Add Topic**: Users can Add Topic.
+- **Sub Topic**: Users can Add SubTopic.
+- **Delete Topic & SubTopic**: Users can delete their own Topics & SubTopics.
 
 ### View Blogs
 
@@ -38,6 +45,8 @@ This project is a Blog Post Panel where users can register, log in, create, read
 - `POST /register`: Register a new user.
 - `POST /login`: Log in an existing user using Passport.js.
 - `GET /logout`: Log out the current user.
+- `POST /forgotPasswordController`: forgotPassword.
+- `GET /changePassword`: changePassword.
 
 ### Blog Routes
 
@@ -46,6 +55,12 @@ This project is a Blog Post Panel where users can register, log in, create, read
 - `POST /blogs/add`: Add a new blog post (with file/image upload).
 - `POST /blogs/edit/:id`: Edit a specific blog post (only by the blog’s author).
 - `DELETE /blogs/delete/:id`: Delete a specific blog post (only by the blog’s author).
+- `GET /addTopics`: addTopics.
+- `GET /subTopic`: subTopic.
+- `GET /deleteTopicAndSubTopics/:id`: Delete a specific Topic  (only by the Topic’s author).
+- `POST /addComment/:id`: addComment.
+- `GET /deletComment/:id`: Delete a specific comment (only by the blog’s author).
+
 
 ## Installation and Setup Project
 

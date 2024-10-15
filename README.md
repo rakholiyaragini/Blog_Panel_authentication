@@ -48,7 +48,7 @@ This project is a Blog Post Panel where users can register, log in, create, read
 - `POST /forgotPasswordController`: forgotPassword.
 - `GET /changePassword`: changePassword.
 
-### Blog Routes
+### Routes
 
 - `GET /blogs`: View all users' blogs.
 - `GET /my-blogs`: View the logged-in user’s blogs (with options to edit/delete).
@@ -73,8 +73,12 @@ This project is a Blog Post Panel where users can register, log in, create, read
 - Express.js
 
 ### follow these steps to run project
+1. Install:
 
-2. Install:
+   ```bash
+   npm i express
+   ```
+1. Install:
 
    ```bash
    npm i nodemon
@@ -83,7 +87,7 @@ This project is a Blog Post Panel where users can register, log in, create, read
 2. start:
 
    ```bash
-   npm install
+   npm start
    ```
 3. Set up the environment variables in a `.env` file:
 
